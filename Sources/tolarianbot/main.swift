@@ -15,12 +15,19 @@ while let update = bot.nextUpdateSync() {
 //        Sends the search terms to the Scryfall API
         AF.request("https://api.scryfall.com/cards/search?q=\(query)").responseJSON(completionHandler: { response in
 //            debugPrint(response)
+//            Constructs a json SwiftyJSON object from Scryfall's response
             switch response.result {
             case .failure(let error):
                 print(error)
             case .success(_):
                 let json = try? JSON(data: response.data!)
-                print("JSON: \(json!)")
+//                print("JSON: \(json!)")
+//                Extracts relevant data from the constructed json
+                for card in json!["data"].arrayValue {
+                        if let id = card["id"].string {
+                        print("\(id)")
+                    }
+                }
             }
         })
     }
