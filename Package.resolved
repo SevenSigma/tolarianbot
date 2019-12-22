@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+        "state": {
+          "branch": null,
+          "revision": "2b6054efa051565954e1d2b9da831680026cd768",
+          "version": "4.3.0"
+        }
+      },
+      {
         "package": "TelegramBotSDK",
         "repositoryURL": "https://github.com/zmeyc/telegram-bot-swift.git",
         "state": {

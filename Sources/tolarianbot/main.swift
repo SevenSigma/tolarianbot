@@ -1,6 +1,7 @@
 import Foundation
 import TelegramBotSDK
 import Alamofire
+import SwiftyJSON
 
 let token = readToken(from: "tolarianbotToken")
 let bot = TelegramBot(token: token)
@@ -15,7 +16,7 @@ while let update = bot.nextUpdateSync() {
         AF.request("https://api.scryfall.com/cards/search?q=\(query)").responseJSON(completionHandler: { response in
             debugPrint(response)
         })
-            }
+    }
 }
 
 fatalError("Server stopped due to error: \(String(describing: bot.lastError))")
