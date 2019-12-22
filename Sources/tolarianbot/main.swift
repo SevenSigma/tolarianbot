@@ -17,12 +17,17 @@ while let update = bot.nextUpdateSync() {
                              text: "Hi \(from.firstName)! You said: \(text).\n")
     }
 //    This deals with queries sent to the bot via its inline mode (e.g.: "@tolarianbot Garruk")
-    if let query = update.inlineQuery?.query.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed) {
-//        func getSmallImages (url: String, parameters: [String: String]) {
-//            Alamofire.request(url, method: .get, paramenters: parameters).responseJSON {
-//
-//            }
-        }
+    if let query = update.inlineQuery?.query {
+        print("Inline query received")
+            }
+}
+
+func searchScryfall (parameters: Parameters) {
+    let parameters = ["foo", "bar"]
+    AF.request("https://api.scryfall.com").responseJSON(completionHandler: { response in
+        debugPrint(response)
+        let searchResult = response.data
+    })
 }
 
 fatalError("Server stopped due to error: \(String(describing: bot.lastError))")
