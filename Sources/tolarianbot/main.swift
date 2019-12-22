@@ -14,7 +14,14 @@ while let update = bot.nextUpdateSync() {
         print("Inline query received: \(query)")
 //        Sends the search terms to the Scryfall API
         AF.request("https://api.scryfall.com/cards/search?q=\(query)").responseJSON(completionHandler: { response in
-            debugPrint(response)
+//            debugPrint(response)
+            switch response.result {
+            case .failure(let error):
+                print(error)
+            case .success(_):
+                let json = try? JSON(data: response.data!)
+                print("JSON: \(json!)")
+            }
         })
     }
 }
