@@ -26,7 +26,7 @@ while let update = bot.nextUpdateSync() {
                 
 //                Variables that will comprise the bot's response
                 var cardResult:InlineQueryResultPhoto = InlineQueryResultPhoto.init()
-                var inline:[InlineQueryResultPhoto] = []
+                var inlineBotResponse:[InlineQueryResultPhoto] = []
                 
 //                Extracts relevant data from the constructed json
                 for card in json!["data"].arrayValue {
@@ -40,12 +40,12 @@ while let update = bot.nextUpdateSync() {
                     cardResult.photoUrl = bigImage ?? "none"
                     cardResult.thumbUrl = smallImage ?? "none"
 
-                    inline.append(cardResult)
+                    inlineBotResponse.append(cardResult)
                         
                 }
 //                Sends the bot's response
 
-                bot.answerInlineQuerySync(inlineQueryId: queryID!, results:inline)
+                bot.answerInlineQuerySync(inlineQueryId: queryID!, results:inlineBotResponse)
             }
         })
     }
