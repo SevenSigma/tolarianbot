@@ -5,6 +5,7 @@ import SwiftyJSON
 
 let token = readToken(from: "tolarianbotToken")
 let bot = TelegramBot(token: token)
+let telegramMaxResponseSize = 50
 
 // Bot main loop. Gets updates and sends replies
 while let update = bot.nextUpdateSync() {
@@ -12,7 +13,7 @@ while let update = bot.nextUpdateSync() {
 //    This deals with queries sent to the bot via its inline mode (e.g.: "@tolarianbot Garruk")
     let queryID = update.inlineQuery?.id
     if let query = update.inlineQuery?.query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-        print("Inline query received: ID \(String(describing: queryID)) - \(query)")
+        print("Inline query received: ID \(queryID!) - \(query)")
         
 //        Sends the search terms to the Scryfall API
         AF.request("https://api.scryfall.com/cards/search?q=\(query)").responseJSON(completionHandler: { response in
@@ -28,23 +29,22 @@ while let update = bot.nextUpdateSync() {
                 var cardResult:InlineQueryResultPhoto = InlineQueryResultPhoto.init()
                 var inlineBotResponse:[InlineQueryResultPhoto] = []
                 
-//                Extracts relevant data from the constructed json
-                for card in json!["data"].arrayValue {
-                    let cardID = card["id"].string
-                    let bigImage = card["image_uris"]["large"].string
-                    let smallImage = card["image_uris"]["small"].string
+//                Extracts relevant data from the constructed json, up to Telegram's max number of items in a response
+                for card in json!["data"].arrayValue.prefix(telegramMaxResponseSize) {
+                    guard let cardID = card["id"].string else {return}
+                    guard let bigImage = card["image_uris"]["large"].string else {return}
+                    guard let smallImage = card["image_uris"]["small"].string else {return}
                             
-//                 Builds the results that the bot will show inline
+//                  Builds the results that the bot will show inline
                     cardResult.typeString = "photo"
-                    cardResult.id = cardID ?? "none"
-                    cardResult.photoUrl = bigImage ?? "none"
-                    cardResult.thumbUrl = smallImage ?? "none"
+                    cardResult.id = cardID
+                    cardResult.photoUrl = bigImage
+                    cardResult.thumbUrl = smallImage
 
                     inlineBotResponse.append(cardResult)
                         
                 }
-//                Sends the bot's response
-
+//              Sends the bot's response
                 bot.answerInlineQuerySync(inlineQueryId: queryID!, results:inlineBotResponse)
             }
         })
